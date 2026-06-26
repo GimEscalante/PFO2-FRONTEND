@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TP Frontend — Coffee Shop AI</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --espresso:   #1A0F07;
+      --roast:      #2C1A0E;
+      --mocha:      #4A2C17;
+      --bark:       #7A4A28;
+      --caramel:    #C8873A;
+      --honey:      #E8A84E;
+      --cream:      #F5E6D3;
+      --latte:      #D4B896;
+      --fog:        #9C8070;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--espresso);
+      color: var(--cream);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      background:
+        radial-gradient(ellipse 60% 50% at 50% 0%, rgba(200,135,58,0.18) 0%, transparent 70%),
+        var(--espresso);
+      overflow: hidden;
+    }
+
+    /* Coffee bean scatter */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle 2px at 15% 25%, rgba(200,135,58,0.25) 0%, transparent 100%),
+        radial-gradient(circle 1px at 80% 15%, rgba(200,135,58,0.2) 0%, transparent 100%),
+        radial-gradient(circle 2px at 65% 75%, rgba(200,135,58,0.15) 0%, transparent 100%),
+        radial-gradient(circle 1px at 30% 70%, rgba(200,135,58,0.2) 0%, transparent 100%),
+        radial-gradient(circle 3px at 90% 55%, rgba(200,135,58,0.1) 0%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--caramel);
+      border: 1px solid rgba(200,135,58,0.4);
+      padding: 0.4rem 1rem;
+      border-radius: 2rem;
+      margin-bottom: 2rem;
+      background: rgba(200,135,58,0.06);
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.8rem, 7vw, 5.5rem);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--cream);
+      max-width: 780px;
+      margin-bottom: 1.2rem;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--caramel);
+    }
+
+    .hero-sub {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--latte);
+      max-width: 520px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+
+    .hero-agents {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 4rem;
+    }
+
+    .agent-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1.1rem;
+      border-radius: 2rem;
+      font-size: 0.82rem;
+      font-weight: 500;
+      border: 1px solid;
+    }
+
+    .agent-tag.claude {
+      background: rgba(200,135,58,0.1);
+      border-color: rgba(200,135,58,0.35);
+      color: var(--honey);
+    }
+
+    .agent-tag.codex {
+      background: rgba(122,74,40,0.2);
+      border-color: rgba(122,74,40,0.5);
+      color: var(--latte);
+    }
+
+    .agent-tag .dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+    }
+
+    .agent-tag.claude .dot { background: var(--caramel); }
+    .agent-tag.codex  .dot { background: var(--bark); }
+
+    .scroll-hint {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--fog);
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: pulse 2.5s ease-in-out infinite;
+    }
+
+    .scroll-hint svg { opacity: 0.5; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(4px); }
+    }
+
+    /* ── STEAM DIVIDER ── */
+    .steam-divider {
+      position: relative;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2rem;
+      overflow: visible;
+    }
+
+    .steam-divider::before {
+      content: '';
+      position: absolute;
+      left: 0; right: 0;
+      top: 50%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--mocha), transparent);
+    }
+
+    .steam-icon {
+      position: relative;
+      z-index: 1;
+      background: var(--espresso);
+      padding: 0 1rem;
+      color: var(--caramel);
+      font-size: 1.4rem;
+    }
+
+    .steam-wisp {
+      display: inline-block;
+      width: 3px;
+      height: 24px;
+      border-radius: 2px;
+      background: linear-gradient(to top, var(--caramel), transparent);
+      animation: steam 2s ease-in-out infinite;
+      position: relative;
+      z-index: 1;
+      background-color: var(--espresso);
+    }
+
+    .steam-wisp::after {
+      content: '';
+      position: absolute;
+      left: 50%; top: 0;
+      transform: translateX(-50%);
+      width: 3px;
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(to top, rgba(200,135,58,0.5), transparent);
+      animation: steam-wave 2s ease-in-out infinite;
+    }
+
+    .steam-wisp:nth-child(2)::after { animation-delay: 0.4s; }
+    .steam-wisp:nth-child(3)::after { animation-delay: 0.8s; }
+
+    @keyframes steam-wave {
+      0% { transform: translateX(-50%) scaleY(0); opacity: 0; }
+      40% { opacity: 1; }
+      100% { transform: translateX(-40%) scaleY(1) translateY(-20px); opacity: 0; }
+    }
+
+    /* ── SECTIONS ── */
+    .sections-wrapper {
+      padding: 0 1.5rem 6rem;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      align-items: start;
+    }
+
+    .card {
+      border-radius: 16px;
+      overflow: hidden;
+      border: 1px solid var(--mocha);
+      background: var(--roast);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(200,135,58,0.15);
+    }
+
+    .card-header {
+      padding: 1.8rem 1.8rem 1.4rem;
+      border-bottom: 1px solid var(--mocha);
+    }
+
+    .card-number {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--caramel);
+      margin-bottom: 0.8rem;
+      opacity: 0.8;
+    }
+
+    .card-icon {
+      font-size: 2.2rem;
+      margin-bottom: 0.8rem;
+      display: block;
+    }
+
+    .card h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--cream);
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-desc {
+      font-size: 0.85rem;
+      color: var(--fog);
+      line-height: 1.6;
+    }
+
+    .card-body {
+      padding: 1.4rem 1.8rem;
+      flex: 1;
+    }
+
+    .card-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.8rem;
+      color: var(--latte);
+    }
+
+    .meta-item span.label {
+      color: var(--fog);
+      min-width: 70px;
+    }
+
+    .meta-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--caramel);
+      flex-shrink: 0;
+    }
+
+    /* Card type variations */
+    .card.prompt .card-header {
+      background: linear-gradient(135deg, rgba(44,26,14,0) 0%, rgba(200,135,58,0.06) 100%);
+    }
+
+    .card.claude-card .card-header {
+      background: linear-gradient(135deg, rgba(44,26,14,0) 0%, rgba(200,135,58,0.1) 100%);
+    }
+
+    .card.codex-card .card-header {
+      background: linear-gradient(135deg, rgba(44,26,14,0) 0%, rgba(74,44,23,0.3) 100%);
+    }
+
+    /* Tag badges on cards */
+    .card-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.08em;
+      padding: 0.25rem 0.6rem;
+      border-radius: 1rem;
+      margin-bottom: 0.8rem;
+      font-weight: 500;
+    }
+
+    .card-tag.t-prompt {
+      background: rgba(200,135,58,0.12);
+      color: var(--honey);
+      border: 1px solid rgba(200,135,58,0.25);
+    }
+
+    .card-tag.t-claude {
+      background: rgba(200,135,58,0.15);
+      color: var(--caramel);
+      border: 1px solid rgba(200,135,58,0.3);
+    }
+
+    .card-tag.t-codex {
+      background: rgba(122,74,40,0.2);
+      color: var(--latte);
+      border: 1px solid rgba(122,74,40,0.4);
+    }
+
+    /* ── CTA BUTTONS ── */
+    .card-footer {
+      padding: 1.2rem 1.8rem 1.8rem;
+    }
+
+    .btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.55rem;
+      width: 100%;
+      padding: 0.85rem 1.4rem;
+      border-radius: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      cursor: pointer;
+      border: none;
+      transition: all 0.25s ease;
+    }
+
+    .btn-primary {
+      background: var(--caramel);
+      color: var(--espresso);
+    }
+
+    .btn-primary:hover {
+      background: var(--honey);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(200,135,58,0.35);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--cream);
+      border: 1px solid var(--mocha);
+    }
+
+    .btn-outline:hover {
+      background: rgba(200,135,58,0.08);
+      border-color: var(--caramel);
+      color: var(--honey);
+    }
+
+    .btn svg { flex-shrink: 0; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--mocha);
+      padding: 2rem;
+      text-align: center;
+      color: var(--fog);
+      font-size: 0.78rem;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.05em;
+    }
+
+    footer span { color: var(--caramel); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .sections-wrapper {
+        grid-template-columns: 1fr;
+        max-width: 500px;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .hero h1 { font-size: 2.4rem; }
+    }
+
+    /* Entrance animation */
+    .card {
+      opacity: 0;
+      transform: translateY(24px);
+      animation: fadeUp 0.55s ease forwards;
+    }
+    .card:nth-child(1) { animation-delay: 0.1s; }
+    .card:nth-child(2) { animation-delay: 0.25s; }
+    .card:nth-child(3) { animation-delay: 0.4s; }
+
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <span class="hero-badge">PFO Frontend</span>
+
+    <h1>
+      Brewing code<br/>
+      with <em>AI agents</em>
+    </h1>
+
+    <p class="hero-sub">
+      Un mismo prompt. Dos agentes distintos. Una landing de coffee shop generada desde cero — sin intervención humana.
+    </p>
+
+    <div class="hero-agents">
+      <div class="agent-tag claude">
+        <span class="dot"></span>
+        Claude Sonnet 4.6 — Anthropic
+      </div>
+      <div class="agent-tag codex">
+        <span class="dot"></span>
+        Codex GPT-5.5 — OpenAI
+      </div>
+    </div>
+
+    <div class="scroll-hint">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+        <path d="M8 3v10M4 9l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      explorar resultados
+    </div>
+  </section>
+
+  <!-- ── STEAM ── -->
+  <div class="steam-divider">
+    <div class="steam-wisp"></div>
+    <span class="steam-icon">☕</span>
+    <div class="steam-wisp"></div>
+  </div>
+
+  <!-- ── CARDS ── -->
+  <div class="sections-wrapper">
+
+    <!-- CARD 1: PROMPT -->
+    <div class="card prompt">
+      <div class="card-header">
+        <span class="card-number">01 / Punto de partida</span>
+        <span class="card-icon">✍️</span>
+        <span class="card-tag t-prompt">prompt.txt</span>
+        <h2>El Prompt Utilizado</h2>
+        <p class="card-desc">
+          Las instrucciones exactas enviadas a ambos agentes para generar la landing page de la cafetería.
+        </p>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item">
+            <span class="meta-dot"></span>
+            <span class="label">Archivo</span>
+            prompt.html
+          </div>
+          <div class="meta-item">
+            <span class="meta-dot"></span>
+            <span class="label">Temática</span>
+            Coffee Shop
+          </div>
+          <div class="meta-item">
+            <span class="meta-dot"></span>
+            <span class="label">Contexto</span>
+            Sin modificaciones
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="prompt.html" class="btn btn-outline" target="_blank">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5h11M7.5 2l5.5 5.5-5.5 5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Ver prompt completo
+        </a>
+      </div>
+    </div>
+
+    <!-- CARD 2: CLAUDE -->
+    <div class="card claude-card">
+      <div class="card-header">
+        <span class="card-number">02 / Resultado A</span>
+        <span class="card-icon">🟠</span>
+        <span class="card-tag t-claude">Claude · Sonnet 4.6</span>
+        <h2>Landing por Claude</h2>
+        <p class="card-desc">
+          La versión generada por el modelo de Anthropic, sin ediciones posteriores al output original.
+        </p>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item">
+            <span class="meta-dot"></span>
+            <span class="label">Modelo</span>
+            claude-sonnet-4-6
+          </div>
+          <div class="meta-item">
+            <span class="meta-dot"></span>
+            <span class="label">Empresa</span>
+            Anthropic
+          </div>
+          <div class="meta-item">
+            <span class="meta-dot"></span>
+            <span class="label">Carpeta</span>
+            /claude/
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="claude/index.html" class="btn btn-primary" target="_blank">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5h11M7.5 2l5.5 5.5-5.5 5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Ver resultado Claude
+        </a>
+      </div>
+    </div>
+
+    <!-- CARD 3: CODEX -->
+    <div class="card codex-card">
+      <div class="card-header">
+        <span class="card-number">03 / Resultado B</span>
+        <span class="card-icon">⚪</span>
+        <span class="card-tag t-codex">Codex · GPT-5.5</span>
+        <h2>Landing por Codex</h2>
+        <p class="card-desc">
+          La versión generada por el modelo de OpenAI, conservada tal como fue entregada por el agente.
+        </p>
+      </div>
+      <div class="card-body">
+        <div class="card-meta">
+          <div class="meta-item">
+            <span class="meta-dot"></span>
+            <span class="label">Modelo</span>
+            gpt-5.5 (Codex)
+          </div>
+          <div class="meta-item">
+            <span class="meta-dot"></span>
+            <span class="label">Empresa</span>
+            OpenAI
+          </div>
+          <div class="meta-item">
+            <span class="meta-dot"></span>
+            <span class="label">Carpeta</span>
+            /codex/
+          </div>
+        </div>
+      </div>
+      <div class="card-footer">
+        <a href="codex/index.html" class="btn btn-outline" target="_blank">
+          <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2 7.5h11M7.5 2l5.5 5.5-5.5 5.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Ver resultado Codex
+        </a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    PFO Frontend &nbsp;·&nbsp; <span>☕</span> &nbsp;·&nbsp; Comparativa Agentes IA 
+  </footer>
+
+</body>
+</html>
