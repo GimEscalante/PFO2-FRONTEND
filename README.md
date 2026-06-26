@@ -16,7 +16,7 @@
  
 ## Deploy
  
-🔗 **[Ver sitio en producción → Vercel](https://pfo-2-frontend-blush.vercel.app/)**
+🔗 **https://pfo-2-frontend-blush.vercel.app**
  
 ---
  
