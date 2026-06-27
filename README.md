@@ -176,8 +176,7 @@ El siguiente prompt fue enviado de forma idéntica a ambos agentes:
  
  
 ```
-<img width="1891" height="905" alt="image" src="https://github.com/user-attachments/assets/7c6ffab7-fca5-4042-bfb4-1d4f602ca4df" />
-<img width="1838" height="865" alt="image" src="https://github.com/user-attachments/assets/5c5eb6d2-c6ad-4232-8201-e6e70cbb15ef" />
+
 
 ```
  
@@ -187,7 +186,7 @@ El siguiente prompt fue enviado de forma idéntica a ambos agentes:
  
 
 ```
-<img width="1874" height="900" alt="image" src="https://github.com/user-attachments/assets/15e3ed7a-c51d-4de7-bf8e-907aae823a50" />
+![Logo](screenshots/claude.jpg)
 
 
 ```
@@ -197,8 +196,7 @@ El siguiente prompt fue enviado de forma idéntica a ambos agentes:
 ### Resultado — Codex GPT-5.5
  
 ```
-<img width="1873" height="915" alt="image" src="https://github.com/user-attachments/assets/b4fe4037-d7ec-4458-bcd8-628088b1e47f" />
-
+![Logo](screenshots/codex.jpg)
 ```
  
 ---
