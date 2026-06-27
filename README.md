@@ -188,7 +188,7 @@ El siguiente prompt fue enviado de forma idéntica a ambos agentes:
  
 
 
-![Codex](screenshots/codex.jpg)
+![Codex](screenshots/claude.jpg)
 
 
 
