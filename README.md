@@ -172,31 +172,34 @@ El siguiente prompt fue enviado de forma idéntica a ambos agentes:
 
 ## Capturas de Pantalla
  
-### Portada Principal
+### Página Principal
  
  
-```
+<img width="1864" height="879" alt="image" src="https://github.com/user-attachments/assets/908a5353-dd03-4747-b272-8adf7115ef16" />
+
+<img width="1808" height="726" alt="image" src="https://github.com/user-attachments/assets/7c486ca5-80f1-40c5-9ce1-8f35fdab7eb2" />
 
 
-```
+
  
 ---
  
 ### Resultado — Claude Sonnet 4.6
  
 
-```
-![Logo](screenshots/claude.jpg)
+
+![Codex](screenshots/codex.jpg)
 
 
-```
+
+
  
 ---
  
 ### Resultado — Codex GPT-5.5
  
-```
-![Logo](screenshots/codex.jpg)
-```
+
+![Codex](screenshots/codex.jpg)
+
  
 ---
